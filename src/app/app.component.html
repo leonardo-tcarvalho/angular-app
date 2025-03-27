@@ -1,11 +1,8 @@
 <div class="header position-relative">
   <div class="container text-center py-4">
     <h1 class="mb-0">{{ title }}</h1>
-    <p class="lead mb-0">Keep track of your tasks effectively</p>
   </div>
-  <button class="theme-toggle" (click)="toggleDarkMode()">
-    <i [class]="darkMode ? 'bi bi-sun' : 'bi bi-moon'"></i>
-  </button>
+  <!-- Removido o botão de alternância de modo escuro -->
 </div>
 
 <div class="todo-container py-4">
@@ -91,7 +88,7 @@
         *ngFor="let todo of filteredTodos"
       >
         <div class="card-body d-flex align-items-center">
-          <div class="form-check me-3">
+          <div class="form-check me-3 align-self-start">
             <label class="custom-checkbox">
               <input
                 type="checkbox"
@@ -138,9 +135,8 @@
 </div>
 
 <footer class="mt-5 pb-3 text-center text-muted">
-  <p><small>Double-click to edit a task • Click to toggle completion</small></p>
   <p>
-    <small>© {{ currentYear }} Todo App</small>
+    <small>© {{ currentYear }} Create By Leonardo Carvalho</small>
     <!-- Use currentYear -->
   </p>
 </footer>

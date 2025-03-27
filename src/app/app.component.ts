@@ -21,7 +21,6 @@ export class AppComponent implements OnInit {
   todos: Todo[] = [];
   newTask = '';
   filter: 'all' | 'active' | 'completed' = 'all';
-  darkMode = false;
   currentYear = new Date().getFullYear(); // Add this property
 
   ngOnInit() {
@@ -32,28 +31,6 @@ export class AppComponent implements OnInit {
         ...todo,
         createdAt: new Date(todo.createdAt),
       }));
-    }
-
-    // Check user preference for dark mode
-    const prefersDark = window.matchMedia(
-      '(prefers-color-scheme: dark)'
-    ).matches;
-    const savedMode = localStorage.getItem('darkMode');
-    this.darkMode = savedMode ? savedMode === 'true' : prefersDark;
-    this.applyTheme();
-  }
-
-  toggleDarkMode() {
-    this.darkMode = !this.darkMode;
-    localStorage.setItem('darkMode', this.darkMode.toString());
-    this.applyTheme();
-  }
-
-  applyTheme() {
-    if (this.darkMode) {
-      document.body.classList.add('dark-theme');
-    } else {
-      document.body.classList.remove('dark-theme');
     }
   }
 

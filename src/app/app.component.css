@@ -118,6 +118,10 @@
   font-size: 1.5rem;
 }
 
+.custom-checkbox {
+  line-height: normal; /* Ajuste para alinhar o checkbox */
+}
+
 /* Media queries for responsive design */
 @media (max-width: 576px) {
   .header {

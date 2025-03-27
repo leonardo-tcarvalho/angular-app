@@ -17,7 +17,7 @@ interface Todo {
   styleUrls: ['./app.component.css'],
 })
 export class AppComponent implements OnInit {
-  title = 'Todo App';
+  title = 'Aplicativo de Tarefas'; // Alterado para português
   todos: Todo[] = [];
   newTask = '';
   filter: 'all' | 'active' | 'completed' = 'all';

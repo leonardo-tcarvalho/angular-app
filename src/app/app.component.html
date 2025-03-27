@@ -2,7 +2,6 @@
   <div class="container text-center py-4">
     <h1 class="mb-0">{{ title }}</h1>
   </div>
-  <!-- Removido o botão de alternância de modo escuro -->
 </div>
 
 <div class="todo-container py-4">
@@ -13,7 +12,7 @@
           <input
             type="text"
             class="form-control form-control-lg"
-            placeholder="What needs to be done?"
+            placeholder="O que precisa ser feito?"
             [(ngModel)]="newTask"
             name="newTask"
             autocomplete="off"
@@ -23,7 +22,7 @@
             class="btn btn-primary"
             [disabled]="!newTask.trim()"
           >
-            <i class="bi bi-plus-lg"></i> Add
+            <i class="bi bi-plus-lg"></i> Adicionar
           </button>
         </div>
       </form>
@@ -35,7 +34,7 @@
           [class.btn-outline-secondary]="filter !== 'all'"
           (click)="filter = 'all'"
         >
-          All ({{ todos.length }})
+          Todos ({{ todos.length }})
         </button>
         <button
           class="btn btn-sm"
@@ -43,7 +42,7 @@
           [class.btn-outline-secondary]="filter !== 'active'"
           (click)="filter = 'active'"
         >
-          Active ({{ activeTodosCount }})
+          Ativos ({{ activeTodosCount }})
         </button>
         <button
           class="btn btn-sm"
@@ -51,7 +50,7 @@
           [class.btn-outline-secondary]="filter !== 'completed'"
           (click)="filter = 'completed'"
         >
-          Completed ({{ completedTodosCount }})
+          Concluídos ({{ completedTodosCount }})
         </button>
       </div>
     </div>
@@ -68,14 +67,16 @@
           class="bi"
           [class]="filter === 'completed' ? 'bi-check2-all' : 'bi-list-task'"
         ></i>
-        <h5>No {{ filter }} tasks</h5>
+        <h5>
+          Nenhuma tarefa {{ filter === "completed" ? "concluída" : "ativa" }}
+        </h5>
         <p class="text-muted">
           {{
             filter === "all"
-              ? "Start adding tasks to your list!"
+              ? "Comece adicionando tarefas à sua lista!"
               : filter === "active"
-              ? "You have completed all your tasks!"
-              : "No completed tasks yet."
+              ? "Você concluiu todas as suas tarefas!"
+              : "Nenhuma tarefa concluída ainda."
           }}
         </p>
       </div>
@@ -102,14 +103,14 @@
           <div class="task-content" [class.completed-task]="todo.completed">
             <div>{{ todo.task }}</div>
             <small class="task-date">
-              {{ todo.createdAt | date : "MMM d, h:mm a" }}
+              Criado em: {{ todo.createdAt | date : "dd/MM/yyyy, HH:mm" }}
             </small>
           </div>
 
           <button
             class="action-btn ms-2"
             (click)="deleteTodo(todo.id)"
-            title="Delete task"
+            title="Excluir tarefa"
           >
             <i class="bi bi-trash"></i>
           </button>
@@ -120,14 +121,14 @@
       <div class="stats-bar mt-3" *ngIf="todos.length > 0">
         <div>
           {{ activeTodosCount }}
-          {{ activeTodosCount === 1 ? "item" : "items" }} left
+          {{ activeTodosCount === 1 ? "tarefa restante" : "tarefas restantes" }}
         </div>
         <button
           class="btn btn-sm btn-outline-danger"
           *ngIf="completedTodosCount > 0"
           (click)="clearCompleted()"
         >
-          Clear completed
+          Limpar concluídas
         </button>
       </div>
     </div>
@@ -136,7 +137,6 @@
 
 <footer class="mt-5 pb-3 text-center text-muted">
   <p>
-    <small>© {{ currentYear }} Create By Leonardo Carvalho</small>
-    <!-- Use currentYear -->
+    <small>© {{ currentYear }} Criado por Leonardo Carvalho</small>
   </p>
 </footer>

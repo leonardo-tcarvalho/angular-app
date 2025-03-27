@@ -1,3 +1,146 @@
-<h1>To-Do List</h1>
+<div class="header position-relative">
+  <div class="container text-center py-4">
+    <h1 class="mb-0">{{ title }}</h1>
+    <p class="lead mb-0">Keep track of your tasks effectively</p>
+  </div>
+  <button class="theme-toggle" (click)="toggleDarkMode()">
+    <i [class]="darkMode ? 'bi bi-sun' : 'bi bi-moon'"></i>
+  </button>
+</div>
 
-<app-todo></app-todo>
+<div class="todo-container py-4">
+  <div class="card mb-4 fade-in">
+    <div class="card-body">
+      <form (submit)="addTodo()" class="todo-form">
+        <div class="input-group todo-input-group">
+          <input
+            type="text"
+            class="form-control form-control-lg"
+            placeholder="What needs to be done?"
+            [(ngModel)]="newTask"
+            name="newTask"
+            autocomplete="off"
+          />
+          <button
+            type="submit"
+            class="btn btn-primary"
+            [disabled]="!newTask.trim()"
+          >
+            <i class="bi bi-plus-lg"></i> Add
+          </button>
+        </div>
+      </form>
+
+      <div class="filters">
+        <button
+          class="btn btn-sm"
+          [class.btn-primary]="filter === 'all'"
+          [class.btn-outline-secondary]="filter !== 'all'"
+          (click)="filter = 'all'"
+        >
+          All ({{ todos.length }})
+        </button>
+        <button
+          class="btn btn-sm"
+          [class.btn-primary]="filter === 'active'"
+          [class.btn-outline-secondary]="filter !== 'active'"
+          (click)="filter = 'active'"
+        >
+          Active ({{ activeTodosCount }})
+        </button>
+        <button
+          class="btn btn-sm"
+          [class.btn-primary]="filter === 'completed'"
+          [class.btn-outline-secondary]="filter !== 'completed'"
+          (click)="filter = 'completed'"
+        >
+          Completed ({{ completedTodosCount }})
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="tasks-container">
+    <!-- Empty state -->
+    <div
+      *ngIf="filteredTodos.length === 0"
+      class="card mb-3 fade-in empty-state"
+    >
+      <div class="card-body">
+        <i
+          class="bi"
+          [class]="filter === 'completed' ? 'bi-check2-all' : 'bi-list-task'"
+        ></i>
+        <h5>No {{ filter }} tasks</h5>
+        <p class="text-muted">
+          {{
+            filter === "all"
+              ? "Start adding tasks to your list!"
+              : filter === "active"
+              ? "You have completed all your tasks!"
+              : "No completed tasks yet."
+          }}
+        </p>
+      </div>
+    </div>
+
+    <!-- Task list -->
+    <div *ngIf="filteredTodos.length > 0">
+      <div
+        class="card mb-3 fade-in task-item"
+        *ngFor="let todo of filteredTodos"
+      >
+        <div class="card-body d-flex align-items-center">
+          <div class="form-check me-3">
+            <label class="custom-checkbox">
+              <input
+                type="checkbox"
+                [checked]="todo.completed"
+                (change)="toggleComplete(todo)"
+              />
+              <span class="checkmark"></span>
+            </label>
+          </div>
+
+          <div class="task-content" [class.completed-task]="todo.completed">
+            <div>{{ todo.task }}</div>
+            <small class="task-date">
+              {{ todo.createdAt | date : "MMM d, h:mm a" }}
+            </small>
+          </div>
+
+          <button
+            class="action-btn ms-2"
+            (click)="deleteTodo(todo.id)"
+            title="Delete task"
+          >
+            <i class="bi bi-trash"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Stats and actions -->
+      <div class="stats-bar mt-3" *ngIf="todos.length > 0">
+        <div>
+          {{ activeTodosCount }}
+          {{ activeTodosCount === 1 ? "item" : "items" }} left
+        </div>
+        <button
+          class="btn btn-sm btn-outline-danger"
+          *ngIf="completedTodosCount > 0"
+          (click)="clearCompleted()"
+        >
+          Clear completed
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer class="mt-5 pb-3 text-center text-muted">
+  <p><small>Double-click to edit a task • Click to toggle completion</small></p>
+  <p>
+    <small>© {{ currentYear }} Todo App</small>
+    <!-- Use currentYear -->
+  </p>
+</footer>

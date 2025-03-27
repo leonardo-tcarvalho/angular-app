@@ -1,14 +1,112 @@
-import { Component } from '@angular/core';
-import { FormsModule } from '@angular/forms'; // Import FormsModule
-import { TodoComponent } from './todo/todo.component';
+import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+
+interface Todo {
+  id: number;
+  task: string;
+  completed: boolean;
+  createdAt: Date;
+}
 
 @Component({
   selector: 'app-root',
+  standalone: true,
+  imports: [CommonModule, FormsModule],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
-  standalone: true,
-  imports: [FormsModule, TodoComponent], // Add FormsModule here
 })
-export class AppComponent {
-  title = 'To-Do List';
+export class AppComponent implements OnInit {
+  title = 'Todo App';
+  todos: Todo[] = [];
+  newTask = '';
+  filter: 'all' | 'active' | 'completed' = 'all';
+  darkMode = false;
+  currentYear = new Date().getFullYear(); // Add this property
+
+  ngOnInit() {
+    // Load todos from localStorage
+    const savedTodos = localStorage.getItem('todos');
+    if (savedTodos) {
+      this.todos = JSON.parse(savedTodos).map((todo: any) => ({
+        ...todo,
+        createdAt: new Date(todo.createdAt),
+      }));
+    }
+
+    // Check user preference for dark mode
+    const prefersDark = window.matchMedia(
+      '(prefers-color-scheme: dark)'
+    ).matches;
+    const savedMode = localStorage.getItem('darkMode');
+    this.darkMode = savedMode ? savedMode === 'true' : prefersDark;
+    this.applyTheme();
+  }
+
+  toggleDarkMode() {
+    this.darkMode = !this.darkMode;
+    localStorage.setItem('darkMode', this.darkMode.toString());
+    this.applyTheme();
+  }
+
+  applyTheme() {
+    if (this.darkMode) {
+      document.body.classList.add('dark-theme');
+    } else {
+      document.body.classList.remove('dark-theme');
+    }
+  }
+
+  addTodo() {
+    if (this.newTask.trim()) {
+      const newTodo: Todo = {
+        id: Date.now(),
+        task: this.newTask,
+        completed: false,
+        createdAt: new Date(),
+      };
+
+      this.todos.unshift(newTodo);
+      this.saveTodos();
+      this.newTask = '';
+    }
+  }
+
+  toggleComplete(todo: Todo) {
+    todo.completed = !todo.completed;
+    this.saveTodos();
+  }
+
+  deleteTodo(id: number) {
+    this.todos = this.todos.filter((todo) => todo.id !== id);
+    this.saveTodos();
+  }
+
+  clearCompleted() {
+    this.todos = this.todos.filter((todo) => !todo.completed);
+    this.saveTodos();
+  }
+
+  saveTodos() {
+    localStorage.setItem('todos', JSON.stringify(this.todos));
+  }
+
+  get filteredTodos(): Todo[] {
+    switch (this.filter) {
+      case 'active':
+        return this.todos.filter((todo) => !todo.completed);
+      case 'completed':
+        return this.todos.filter((todo) => todo.completed);
+      default:
+        return this.todos;
+    }
+  }
+
+  get activeTodosCount(): number {
+    return this.todos.filter((todo) => !todo.completed).length;
+  }
+
+  get completedTodosCount(): number {
+    return this.todos.filter((todo) => todo.completed).length;
+  }
 }
